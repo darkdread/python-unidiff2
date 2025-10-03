@@ -15,6 +15,8 @@ URL = 'https://github.com/matiasb/python-unidiff'
 EMAIL = 'mbordese@gmail.com'
 AUTHOR = 'Matias Bordese'
 LICENSE = 'MIT'
+MAINTAINER = 'Jef Roelandt'
+MAINTAINER_EMAIL = 'roelandt.jef@plaws.fr'
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -37,6 +39,8 @@ setup(
     keywords=KEYWORDS,
     author=AUTHOR,
     author_email=EMAIL,
+    maintainer=MAINTAINER,
+    maintainer_email=MAINTAINER_EMAIL,
     url=URL,
     packages=find_packages(exclude=('tests',)),
     scripts=['bin/unidiff'],
