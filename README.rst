@@ -3,13 +3,16 @@ Unidiff
 
 Simple Python library to parse and interact with unified diff data.
 
+The original version seems not to be actively maintained.
+This repository intend to offer an actively maintained version of unidiff.
+
 
 Installing unidiff
 ------------------
 
 ::
 
-    $ pip install unidiff
+    $ pip install unidiff2
 
 
 Quick start
