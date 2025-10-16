@@ -121,6 +121,10 @@ class Line(object):
         # type: () -> bool
         return self.line_type == LINE_TYPE_CONTEXT
 
+    def prepend_line_number(self):
+        # type: () -> str
+        return "%d %s%s" % (self.target_line_no or self.source_line_no, self.line_type, self.value)
+
 
 @implements_to_string
 class PatchInfo(list):
@@ -180,6 +184,18 @@ class Hunk(list):
         content = ''.join(unicode(line) for line in self)
         return head + content
 
+    @property
+    def head(self):
+        # type: () -> str
+        return "@@ -%d,%d +%d,%d @@%s\n" % (
+            self.source_start, self.source_length,
+            self.target_start, self.target_length,
+            ' ' + self.section_header if self.section_header else '')
+
+    def prepend_line_number(self):
+        # type: () -> str
+        return self.head + ''.join(unicode(line.prepend_line_number()) for line in self)
+
     def append(self, line):
         # type: (Line) -> None
         """Append the line to hunk, and keep track of source/target lines."""
@@ -238,8 +254,8 @@ class PatchedFile(list):
 
     def __init__(self, patch_info=None, source='', target='',
                  source_timestamp=None, target_timestamp=None,
-                 is_binary_file=False):
-        # type: (Optional[PatchInfo], str, str, Optional[str], Optional[str], bool, bool) -> None
+                 is_binary_file=False, prepend_line_number=False):
+        # type: (Optional[PatchInfo], str, str, Optional[str], Optional[str], bool, bool, bool) -> None
         super(PatchedFile, self).__init__()
         self.patch_info = patch_info
         self.source_file = source
@@ -247,6 +263,7 @@ class PatchedFile(list):
         self.target_file = target
         self.target_timestamp = target_timestamp
         self.is_binary_file = is_binary_file
+        self.prepend_line_number = prepend_line_number
 
     def __repr__(self):
         # type: () -> str
@@ -265,7 +282,7 @@ class PatchedFile(list):
             target = "+++ %s%s\n" % (
                 self.target_file,
                 '\t' + self.target_timestamp if self.target_timestamp else '')
-        hunks = ''.join(unicode(hunk) for hunk in self)
+        hunks = ''.join(unicode(hunk.prepend_line_number() if self.prepend_line_number else hunk) for hunk in self)
         return info + source + target + hunks
 
     def _parse_hunk(self, header, diff, encoding, metadata_only):
@@ -453,8 +470,8 @@ class PatchedFile(list):
 class PatchSet(list):
     """A list of PatchedFiles."""
 
-    def __init__(self, f, encoding=None, metadata_only=False):
-        # type: (Union[StringIO, str], Optional[str], bool) -> None
+    def __init__(self, f, encoding=None, metadata_only=False, prepend_line_number=False):
+        # type: (Union[StringIO, str], Optional[str], bool, bool) -> None
         super(PatchSet, self).__init__()
 
         # convert string inputs to StringIO objects
@@ -467,7 +484,7 @@ class PatchSet(list):
         # when metadata_only is True, only perform a minimal metadata parsing
         # (ie. hunks without content) which is around 2.5-6 times faster;
         # it will still validate the diff metadata consistency and get counts
-        self._parse(data, encoding=encoding, metadata_only=metadata_only)
+        self._parse(data, encoding=encoding, metadata_only=metadata_only, prepend_line_number=prepend_line_number)
 
     def __repr__(self):
         # type: () -> str
@@ -477,8 +494,8 @@ class PatchSet(list):
         # type: () -> str
         return ''.join(unicode(patched_file) for patched_file in self)
 
-    def _parse(self, diff, encoding, metadata_only):
-        # type: (StringIO, Optional[str], bool) -> None
+    def _parse(self, diff, encoding, metadata_only, prepend_line_number):
+        # type: (StringIO, Optional[str], bool, bool) -> None
         current_file = None
         patch_info = None
 
@@ -496,7 +513,7 @@ class PatchSet(list):
                 source_file = is_diff_git_header.group('source')
                 target_file = is_diff_git_header.group('target')
                 current_file = PatchedFile(
-                    patch_info, source_file, target_file, None, None)
+                    patch_info, source_file, target_file, None, None, prepend_line_number=prepend_line_number)
                 self.append(current_file)
                 patch_info.append(line)
                 continue
