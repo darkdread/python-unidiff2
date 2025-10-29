@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "unidiff2"
-version = "0.7.6"
+version = "0.7.7"
 description = "Unified diff parsing/metadata extraction library."
 readme = {file = "README.rst", content-type = "text/x-rst"}
 keywords = ["unified", "diff", "parse", "metadata"]

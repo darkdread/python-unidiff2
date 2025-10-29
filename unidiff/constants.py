@@ -69,7 +69,10 @@ RE_NO_NEWLINE_MARKER = re.compile(r'^\\ No newline at end of file')
 RE_BINARY_DIFF = re.compile(
     r'^Binary files? '
     r'(?P<source_filename>[^\t]+?)(?:\t(?P<source_timestamp>[\s0-9:\+-]+))?'
-    r'(?: and (?P<target_filename>[^\t]+?)(?:\t(?P<target_timestamp>[\s0-9:\+-]+))?)? (differ|has changed)')
+    r'(?: and (?P<target_filename>[^\t]+?)'
+    r'(?:\t(?P<target_timestamp>[\s0-9:\+-]+))?)'
+    r'? (differ|has changed)'
+)
 
 RE_PATCH_FILE_PREFIX = re.compile(r"^[abciow12]/.*$")
 
