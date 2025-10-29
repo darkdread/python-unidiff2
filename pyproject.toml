@@ -29,7 +29,7 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/matiasb/python-unidiff"
+Homepage = "https://github.com/SuperMeepEnby/python-unidiff2"
 
 [project.scripts]
 unidiff = "bin.unidiff:main"
