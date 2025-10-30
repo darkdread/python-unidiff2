@@ -549,7 +549,7 @@ class PatchSet(list):
             if is_hunk_header:
                 patch_info = None
                 if current_file is None:
-                    raise UnidiffParseError('Unexpected hunk found: {line}')
+                    raise UnidiffParseError(f'Unexpected hunk found: {line}')
                 current_file._parse_hunk(
                     line,
                     enumerated_diff,
