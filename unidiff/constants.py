@@ -30,9 +30,9 @@ import re
 
 
 RE_SOURCE_FILENAME = re.compile(
-    r'^--- (?P<filename>"?[^\t\n]+"?)(?:\t(?P<timestamp>[^\n]+))?')
+    r'^---( ?)(?P<filename>"?[^\t\n]+"?)(?:\t(?P<timestamp>[^\n]+))?')
 RE_TARGET_FILENAME = re.compile(
-    r'^\+\+\+ (?P<filename>"?[^\t\n]+"?)(?:\t(?P<timestamp>[^\n]+))?')
+    r'^\+\+\+( ?)(?P<filename>"?[^\t\n]+"?)(?:\t(?P<timestamp>[^\n]+))?')
 
 
 # check diff git line for git renamed files support

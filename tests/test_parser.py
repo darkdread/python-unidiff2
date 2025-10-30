@@ -534,3 +534,11 @@ class TestVCSSamples(unittest.TestCase):
         # by unidiff are the same
         with codecs.open(file_path, 'r', encoding='utf-8') as diff_file:
             self.assertEqual(diff_file.read(), str(res))
+
+    def test_no_filename_in_header(self):
+        tests_dir = os.path.dirname(os.path.realpath(__file__))
+        file_path = os.path.join(tests_dir, 'samples/sample_no_filename.diff')
+        with codecs.open(file_path, 'r', encoding='utf-8') as diff_file:
+            res = PatchSet(diff_file)
+
+        self.assertEqual(' ', res.modified_files[0].source_file)
