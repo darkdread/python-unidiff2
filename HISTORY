@@ -1,7 +1,12 @@
 History
 -------
 
-0.7.7 - 2025-03-09
+0.7.8 - 2025-10-30
+------------------
+
+* Fixed issue when trying to work with diff with no filename
+
+0.7.7 - 2025-10-29
 ------------------
 
 * Drop Python2 support
